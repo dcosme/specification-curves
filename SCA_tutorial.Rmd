@@ -88,8 +88,7 @@ if (!require(cowplot)) {
 # specify models
 models = list(mpg ~ cyl,
               mpg ~ cyl + hp,
-              mpg ~ cyl * hp,
-              mpg ~ cyl*hp*as.factor(vs))
+              mpg ~ cyl * hp)
 
 # run models and extract parameter estimates and stats
 (model_params = map(models, ~lm(.x,  data = mtcars)) %>%
@@ -283,7 +282,7 @@ cowplot::plot_grid(top, bottom, ncol = 1, align = "v", labels = c('A', 'B'))
 ```
 
 # a more complicated example
-## run all nested models
+## run all nested models using `dredge`
 ```{r complicated model}
 # run full model
 full.model = lm(mpg ~ cyl + disp + hp + drat + wt + qsec + as.factor(vs) + am + gear + carb, data = mtcars.na)
@@ -365,8 +364,22 @@ cowplot::plot_grid(top, bottom, ncol = 1, align = "v", labels = c('A', 'B'))
 ```
 
 # coefficient specification curve
-## extract coefficients
+## mpg ~ wt
+### extract coefficients
 ```{r coefficient models}
+# extract parameter estimate (step-by-step output)
+MuMIn::get.models(models.sca, subset = TRUE) %>%
+  tibble() %>%
+  rename("model" = ".")
+
+MuMIn::get.models(models.sca, subset = TRUE) %>%
+  tibble() %>%
+  rename("model" = ".") %>%
+  mutate(tidied = purrr::map(model, broom::tidy),
+         model_num = row_number()) %>%
+  select(model_num, tidied) %>%
+  unnest()
+
 # extract parameter estimate
 (model_params = MuMIn::get.models(models.sca, subset = TRUE) %>%
   tibble() %>%
@@ -391,7 +404,7 @@ cowplot::plot_grid(top, bottom, ncol = 1, align = "v", labels = c('A', 'B'))
   select(model_num, estimate, std.error, p.value))
 ```
 
-## plot specification curve
+### plot specification curve
 ```{r coefficient spec curve, fig.width=10, fig.height=6}
 # merge and tidy for plotting
 plot.data = left_join(model_ps, model_params, by = "model_num") %>%
@@ -462,7 +475,8 @@ bottom = plot.data %>%
 (wt = cowplot::plot_grid(top, bottom, ncol = 1, align = "v", labels = c('A', 'B')))
 ```
 
-## extract coefficients
+## mpg ~ cyl
+### extract coefficients
 ```{r coefficient models cyl}
 # extract p-values for the intercept term
 model_ps = MuMIn::get.models(models.sca, subset = TRUE) %>%
@@ -477,7 +491,7 @@ model_ps = MuMIn::get.models(models.sca, subset = TRUE) %>%
   select(model_num, estimate, std.error, p.value)
 ```
 
-## plot specification curve
+### plot specification curve
 ```{r coefficient spec curve cyl, fig.width=10, fig.height=6}
 # merge and tidy for plotting
 plot.data = left_join(model_ps, model_params, by = "model_num") %>%

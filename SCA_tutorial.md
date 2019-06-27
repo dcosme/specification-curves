@@ -4,7 +4,7 @@ background
 -   The problem: there are many different wants to test a model and we usually only report one or a few specifications, which rely on choices by the researcher, which are often artbitrary and sometimes driven by a desire for significant results.
 -   The solution (according to Simonsohn, Simmons, & Nelson): specify all "reasonable" models and assess the distribution of effects
 
-![Figure 1 Simonsohn, Simmons, & Nelson, 2015](figure1.png)
+![Figure 1 Simonsohn, Simmons, & Nelson, 2015](figure1.png) **Figure 1 Simonsohn, Simmons, & Nelson, 2015**
 
 steps for conducting SCA
 ------------------------
@@ -20,12 +20,12 @@ steps for conducting SCA
 -   Expected to be statistically valid
 -   Non-redundant
 
-![Table 1 Simonsohn, Simmons, & Nelson, 2015](table1.png)
+![Table 1 Simonsohn, Simmons, & Nelson, 2015](table1.png) **Table 1 Simonsohn, Simmons, & Nelson, 2015**
 
 2. Descriptive specification curve
 ----------------------------------
 
-![Figure 2 Simonsohn, Simmons, & Nelson, 2015](figure2.png)
+![Figure 2 Simonsohn, Simmons, & Nelson, 2015](figure2.png) Figure 2 Simonsohn, Simmons, & Nelson, 2015
 
 3. Inferential statistics
 -------------------------
@@ -36,11 +36,11 @@ steps for conducting SCA
     -   Is the share of dominant signs (e.g., positive or negative effects) different than the null?
     -   Is the share of dominant signs that are statistically significant different than the null?
 
-![Table2 Simonsohn, Simmons, & Nelson, 2015](table2.png)
+![Table2 Simonsohn, Simmons, & Nelson, 2015](table2.png) **Table 2 Simonsohn, Simmons, & Nelson, 2015**
 
 -   Also possible to compare specification surves between two variables of interest
 
-![Figure 6 Orben & Przybylski, 2019](figure6.png)
+![Figure 6 Orben & Przybylski, 2019](figure6.png) **Figure 6 Orben & Przybylski, 2019**
 
 examples
 ========
@@ -739,4 +739,5 @@ wt
 next steps
 ==========
 
-... Inferential statistics using specification curves! ... Plot standard errors!
+... Inferential statistics using specification curves!
+... Plot standard errors!

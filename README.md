@@ -1,6 +1,6 @@
 # specification-curves
-Tutorial on Specification Curve Analysis presented at the University of Oregon Developmental Brown Bag, May 2019.
+This tutorial was presented at the University of Melbourne, September 29, 2020.
 
-To execute the code in R, open the [SCA_tutorial.Rmd](SCA_tutorial.Rmd) file. 
+To view the tutorial code, open the [SCA_tutorial_inferential.Rmd](SCA_tutorial_inferential.Rmd) file or view the markdown file [here](https://dcosme.github.io/specification-curves/SCA_tutorial_inferential). 
 
-To view as a markdown file, open the [SCA_tutorial.md](SCA_tutorial.md) file.
+To view the presentation, visit [dcosme.github.io](https://dcosme.github.io/specification-curves/SCA_tutorial_inferential_presentation).

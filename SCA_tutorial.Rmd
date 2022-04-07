@@ -90,110 +90,205 @@ if (!require(broom)) {
 if (!require(cowplot)) {
   install.packages('cowplot')
 }
+if (!require(combinat)) {
+  install.packages('combinat')
+}
+devtools::install_github("dcosme/specr", ref = "plotmods")
+library(specr)
 ```
 
-# run multiple models using `map` from `purrr`
-* Note that if you are running linera mixed effects modesl, you can use the `broom.mixed` instead of the `broom` package to tidy the model output
+# 1. Define reasonable specifications
+Research question:
 
-```{r map}
-# specify models
-models = list(mpg ~ cyl,
-              mpg ~ cyl + hp,
-              mpg ~ cyl * hp)
+What is the relationship between mental health and satisfaction with life?
 
-# run models and extract parameter estimates and stats
-(model_params = map(models, ~lm(.x,  data = mtcars)) %>%
-  tibble() %>%
-  rename("model" = ".") %>%
-  mutate(tidied = purrr::map(model, broom::tidy),
-         model_num = row_number()) %>%
-  select(model_num, tidied) %>%
-  unnest())
+### Ways of operationalizing of the IV "mental health"
+* `CEDS10_mean` = mean depression score on the CESD-10
+* `GAD7_sum` = summed anxiety score on the GAD-7
+* `PANAS_negative_Affect` = mean negative affect score on the PANAS-X
+* `PSS_sum` = summed perceived stress score on the PSS
 
-# run models and extract model fits
-(model_fits = purrr::map(models, ~lm(.x,  data = mtcars)) %>%
-  tibble() %>%
-  rename("model" = ".") %>%
-  mutate(model_num = row_number(),
-         AIC = map_dbl(model, AIC),
-         BIC = map_dbl(model, BIC)) %>%
-  select(-model))
+### Control variables
+* `age` = age
+* `gender` = gender 
+* `mother_edu` = maternal education
 
-# join dataframes and select model fits and parameter estimates
-model_params %>%
-  select(model_num, term, estimate) %>%
-  spread(term, estimate) %>%
-  left_join(., model_fits) %>%
-  arrange(AIC)
+### Analytic decisions
+* statistical modeling approach
+  * linear regression
+* outliers
+  * use all data points
+  * winsorize to the mean +/- 3 SD
+  
+## load and tidy data
+* create winsorized independent variables (+/- 3 SD from the mean)
+* mean center and standardize each variable
+
+```{r}
+df = read.csv("~/Documents/code/dsnlab/FP_scripts/behavioral/self_report/scored_full_sample.csv") %>%
+  filter(grepl("T1", survey_name)) %>%
+  filter(scored_scale %in% c("age", "gender", "mother edu") | scale_name %in% c("CESD-10", "GAD7", "PANAS", "PSS", "SWLS")) %>%
+  unite(scale_name, scale_name, scored_scale) %>%
+  mutate(scale_name = gsub("CVS_", "", scale_name),
+         scale_name = gsub(" ", "_", scale_name),
+         SID = gsub("FP", "s", SID),
+         SID = as.factor(SID)) %>%
+  select(SID, scale_name, score) %>%
+  spread(scale_name, score) %>%
+  select(-GAD7_difficulty, -PANAS_positive_affect) %>%
+  mutate(gender = ifelse(gender == 1, "female", "male"),
+         gender = as.factor(gender)) %>%
+  rename("CESD10_mean" = `CESD-10_mean`,
+         "PID" = SID)
+
+df$age = rnorm(nrow(df), mean = 20, sd = 2) # make up ages
+
+model_df = df %>%
+  gather(variable, value, -PID, -age, -gender, -mother_edu, -SWLS_mean) %>%
+  group_by(variable) %>%
+  mutate(mean_value = mean(value, na.rm = TRUE),
+         sd3 = 3*sd(value, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(value_winsorized = ifelse(value > mean_value + sd3, mean_value + sd3,
+                            ifelse(value < mean_value - sd3, mean_value - sd3, value)),
+         variable_winsorized = sprintf("%s_winsorized", variable)) %>%
+  select(-mean_value, -sd3) %>%
+  spread(variable_winsorized, value_winsorized) %>%
+  group_by(PID) %>%
+  fill(contains("winsorized"), .direction = "downup") %>%
+  spread(variable, value) %>%
+  gather(variable, value, -PID, -age, -gender, -mother_edu) %>%
+  group_by(variable) %>%
+  mutate(value = scale(value, center = TRUE, scale = TRUE)) %>%
+  spread(variable, value) %>%
+  select(PID, age, gender, mother_edu, SWLS_mean, sort(tidyselect::peek_vars()))
+
+model_df %>%
+  DT::datatable(rownames = FALSE, extensions = 'FixedColumns', 
+                    options = list(scrollX = TRUE,
+                                   scrollY = TRUE,
+                                   fixedColumns = list(leftColumns = 1)))
 ```
 
-# run all nested models using `dredge` from `MuMIn`
-* max number of predictors = 30
+## plot distributions
+```{r, warning = FALSE, width = 8, height = 4}
+palette = wesanderson::wes_palette("Zissou1", 2, "continuous")
+
+df %>%
+  filter(!is.na(gender)) %>%
+  gather(variable, value, -PID, -gender) %>%
+  ggplot(aes(value, fill = gender, color = gender)) +
+  geom_density(alpha = .5, color = NA) +
+  geom_jitter(aes(value, y = 0), height = .005, alpha = .5) + 
+  facet_wrap(~variable, scales = "free", nrow = 2) +
+  scale_fill_manual(values = c(palette[2], palette[1])) +
+  scale_color_manual(values = c(palette[2], palette[1])) +
+  theme_minimal() +
+  theme(legend.position = c(.9, .2))
+```
+
+# 2. Specify and run models {.tabset}
+There are various methods for running a large number of model specifications.
+
+Here, we unpack 3 different methods and discuss the advantages and disadvantages.
+
+## run all nested models using `dredge` from `MuMIn`
+Advantages
+* easily runs all nested models from a maximal model
+
+Disadvantages / limitations
+* the max number of predictors = 30
+* NAs must be omitted across all model specifications
+* doesn’t give parameter estimates for factors directly; you need to extract them using `MuMIn::get.models()`
+* it may run nested models you aren't interested in
+
 ```{r dredge}
-# set na.action for dredge
-options(na.action = "na.fail")
-
 # omit NAs
-mtcars.na = mtcars %>% 
+model_df_na = model_df %>% 
+  select(SWLS_mean, CESD10_mean, CESD10_mean_winsorized, age, gender, mother_edu) %>%
   na.omit()
 
 # run full model
-full.model = lm(mpg ~ cyl*hp, data = mtcars.na)
+full_model = lm(SWLS_mean ~ CESD10_mean + age + gender + mother_edu, data = model_df_na)
 
 # run all possible nested models
-(all.models = MuMIn::dredge(full.model, rank = "AIC", extra = "BIC"))
+(all_models = MuMIn::dredge(full_model, rank = "AIC", extra = "BIC"))
 ```
 
-# issues with factors
-## run factor models using `dredge`
-* doesn’t give parameter estimates for factors directly; you need to extract them using `MuMIn::get.models()`
+## run multiple models directly using `purrr::map`
+[`purrr`](https://purrr.tidyverse.org/index.html) is an amazing package for functional programming and is super useful to running numeous model specifications.
 
-```{r factors dredge}
-# run full model
-full.model = lm(mpg ~ cyl*as.factor(vs), data = mtcars.na)
+Advantages
+* greater control over how models are specified
 
-# run all possible nested models
-MuMIn::dredge(full.model, rank = "AIC", extra = "BIC") %>%
-  select(AIC, BIC, everything())
-```
+Disadvantages / limitations
+* 
 
-## run factor models using `map`
-```{r factors map}
-# specify models
-models = list(mpg ~ 1,
-              mpg ~ cyl,
-              mpg ~ as.factor(vs),
-              mpg ~ cyl + as.factor(vs),
-              mpg ~ cyl*as.factor(vs))
+Note that if you are running linear mixed effects models, you can use the `broom.mixed` instead of the `broom` package to tidy the model output.
+
+```{r map}
+# define function to convert the model components into a formula
+convert_formula = function(x, y, controls, ...) {
+  if (controls == "no covariates") {
+    paste(y, "~", x)    
+  } else {
+    paste(y, "~", x, "+", controls)
+  }
+}
+
+# specify model components
+dvs = "SWLS_mean"
+ivs = names(model_df)[!names(model_df) %in% c("PID", "age", "gender", "mother_edu", "SWLS_mean")]
+control_vars = c("age", "gender", "mother_edu")
+model = "lm"
+
+# generate all combinations of control variables
+control_list = controls = do.call(c, lapply(1:length(control_vars), function(x) combinat::combn(control_vars, x, simplify = FALSE))) %>%
+  purrr::map(function(x) paste(x, collapse = " + ")) %>%
+  unlist() %>%
+  append(., "no covariates")
+
+# generate model specifications from model components
+models = expand.grid(x = ivs,
+                     y = dvs,
+                     model = model,
+                     controls = control_list, stringsAsFactors = FALSE) %>%
+  tibble()
 
 # run models and extract parameter estimates and stats
-model_params = map(models, ~lm(.x,  data = mtcars)) %>%
-  tibble() %>%
-  rename("model" = ".") %>%
-  mutate(tidied = purrr::map(model, broom::tidy),
-         model_num = row_number()) %>%
-  select(model_num, tidied) %>%
-  unnest()
-
-# run models and extract model fits
-model_fits = purrr::map(models, ~lm(.x,  data = mtcars)) %>%
-  tibble() %>%
-  rename("model" = ".") %>%
-  mutate(model_num = row_number(),
-         AIC = map_dbl(model, AIC),
-         BIC = map_dbl(model, BIC)) %>%
-  select(-model)
-
-# join dataframes and select model fits and parameter estimates
-(models.sca = model_params %>%
-  select(model_num, term, estimate) %>%
-  spread(term, estimate) %>%
-  left_join(., model_fits) %>%
-  arrange(AIC)%>%
-  select(AIC, BIC, everything()))
+output = models %>%
+  mutate(formula = pmap(models, convert_formula)) %>%
+  unnest(formula) %>%
+  mutate(fit = map2(model,
+                    formula,
+                    ~ do.call(.x, list(data = model_df, formula = .y)))) %>%
+  mutate(coefs = map(fit,
+                     broom::tidy,
+                     conf.int = TRUE,
+                     conf.level = .95),
+         obs = map(fit, nobs)) %>%
+  unnest(coefs) %>%
+  unnest(obs) %>%
+  filter(term == x) %>%
+  select(model, y, x, controls, formula, everything(), -term, -fit) 
 ```
 
-# plot specification curve
+## run models using the `specr` package
+[`specr`](https://masurp.github.io/specr/) is a package specifically built for conducting specification curve analysis and utilizes `purrr` in its functions. 
+
+Advantages
+* 
+
+Disadvantages / limitations
+* without modifying, it currently does not handle multilevel modeling
+
+
+```{r}
+
+```
+
+
+# 3. plot specification curve
 * Panel A = model fit of each model specification
 * Panel B = variables included in each model specification
 * Null model (intercept only) is highlighted in blue

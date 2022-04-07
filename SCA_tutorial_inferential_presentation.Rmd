@@ -1,14 +1,15 @@
 ---
-title: "Specification Curve Analysis"
-subtitle: "A Practical Guide"
+title: "Specification Curve Analysis: A practical guide"
+subtitle: "COMM 783 | University of Pennsylvania"
 author: "[Dani Cosme](https://dcosme.github.io/)"
-institute: "University of Pennsylvania"
+institute: ""
 date: "`r Sys.Date()`"
 output:
   xaringan::moon_reader:
+    css: ["default", "css/dcos.css", "css/dcos-fonts.css"]
     lib_dir: libs
     nature:
-      highlightStyle: github
+      highlightStyle: atelier-lakeside-light
       highlightLines: true
       countIncrementalSlides: false
 ---
@@ -17,6 +18,9 @@ output:
 options(htmltools.dir.version = FALSE)
 
 # load packages
+if(!require('xaringanExtra')) {
+	devtools::install_github("gadenbuie/xaringanExtra")
+}
 if (!require(tidyverse)) {
   install.packages('tidyverse')
 }
@@ -41,20 +45,12 @@ if (!require(ggraph)) {
 if (!require(devtools)) {
   install.packages('devtools')
 }
-#devtools::install_github("masurp/specr") #devtools::install_github("dcosme/specr", ref = "plotmods")
+devtools::install_github("masurp/specr") #devtools::install_github("dcosme/specr", ref = "plotmods")
 library(specr)
 
 xaringanExtra::use_xaringan_extra(include = c("panelset"))
 ```
 
-```{r xaringan-themer, include=FALSE, warning=FALSE}
-# library(xaringanthemer)
-# style_mono_accent(base_color = "#23395b",
-#                   text_font_google = google_font("Montserrat", "300", "300i"),
-#                   code_font_google = google_font("Source Code Pro"),
-#                   link_color = "#BA8800",
-#                   code_inline_color = "#BA8800")
-```
 
 # The problem
 
@@ -71,8 +67,9 @@ Model selection relies on choices by the researcher, and these choices are often
 
 Given the same dataset, two researchers might choose to answer the same question in very different ways.
 
-<br><br>
-![](https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41562-020-0912-z/MediaObjects/41562_2020_912_Fig1_HTML.png)
+```{r echo = FALSE, out.width="70%", fig.align = "center"}
+knitr::include_graphics("https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41562-020-0912-z/MediaObjects/41562_2020_912_Fig1_HTML.png")
+```
 
 Figure from [Simonsohn, Simmons, & Nelson, 2020](https://www.nature.com/articles/s41562-020-0912-z)
 
@@ -82,18 +79,23 @@ Figure from [Simonsohn, Simmons, & Nelson, 2020](https://www.nature.com/articles
 
 --
 
-According to [Simonsohn, Simmons, & Nelson, 2020](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2694998)), the solution is to specify all "reasonable" models to test an association and assess the joint distribution across model specifications.
+According to [Simonsohn, Simmons, & Nelson, 2020](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2694998), the solution is to specify all "reasonable" models to test an association and assess the joint distribution across model specifications.
 
 --
+<br>
 
 > Some researchers object to blindly running alternative specifications that may make little sense for theoretical or statistical reasons just for the sake of ‘robustness’. We are among those researchers. We believe one should test specifications that vary in as many of the potentially ad hoc assumptions as possible without testing any specifications that are not theoretically grounded.
 
 --
-
+<br>
 This can be thought of as an explicit framework for sensitivity analyses / robustness checks, that enables inferential statistics across model specifications.
 
 ---
 
+# Preregistration & SCA
+
+
+---
 # The value
 
 --
@@ -102,10 +104,9 @@ A better understanding of how conceptual and analytic decisions alter the associ
 
 --
 
-A more robust scientific literature with <span style="background-color: #F0F757">increased generalizability and translational value</span>.
+A more robust scientific literature with <span style="background-color: #21B0D4">increased generalizability and translational value</span>.
 
 --
-<br><br><br>
 
 .center[
 ```{r echo = FALSE, out.width="50%"}
@@ -118,15 +119,15 @@ knitr::include_graphics("https://media.giphy.com/media/WUq1cg9K7uzHa/giphy.gif")
 # SCA overview
 
 --
-1. Specify all reasonable models
+### 1. Specify all reasonable models
 
 --
 
-2. Plot specification curve showing association/effect estimates as a function of decisions
+### 2. Plot specification curve showing association/effect estimates as a function of decisions
 
 --
 
-3. Test how inconsistent the curve results are given the null hypothesis of no association/effect
+### 3. Test how inconsistent the curve results are given the null hypothesis of no association/effect
 
 ---
 
@@ -137,11 +138,11 @@ For the relationship of interest, determine the set of reasonable model specific
 
 #### Reasonable specifications should be:
 + Consistent with theory
-+  Expected to be statistically valid
-+  Non-redundant
++ Expected to be statistically valid
++ Non-redundant
 
 .center[
-```{r echo = FALSE, out.width="90%"}
+```{r echo = FALSE, out.width="70%"}
 knitr::include_graphics("img/table1_2020.png")
 ```
 ]
@@ -150,6 +151,11 @@ Table from [Simonsohn, Simmons, & Nelson, 2020](https://www.nature.com/articles/
 
 ---
 
+## 1. Identify reasonable models
+
+Del Guidice guidance
+
+---
 ## 2. Descriptive specification curve
 The specification curve visualizes the strength of the association/effect between two constructs of interest across model specifications and the analytic decisions associated with each model specification.
 
@@ -158,7 +164,7 @@ The specification curve visualizes the strength of the association/effect betwee
 .pull-left[
 **Key features**
 * Two panels depicting 1) the curve and 2) the decisions
-* A vertical slice = a single model specification
+* A vertical slice = information about a single model specification
 ]
 
 
@@ -209,50 +215,51 @@ Figure from [Simonsohn, Simmons, & Nelson, 2020](https://www.nature.com/articles
 
 .panelset[
 .panel[.panel-name[Simonsohn et al., 2020]
-```{r echo = FALSE, out.width="80%", fig.align = "center"}
+```{r echo = FALSE, out.width="70%", fig.align = "center"}
 knitr::include_graphics("https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41562-020-0912-z/MediaObjects/41562_2020_912_Fig2_HTML.png")
 ```
 
 Figure from [Simonsohn, Simmons, & Nelson, 2020](https://www.nature.com/articles/s41562-020-0912-z)
 ]
 
-.panel[.panel-name[Orben  & Przybylski, 2019]
-```{r echo = FALSE, out.width="60%", fig.align = "center"}
+.panel[.panel-name[Orben & Przybylski, 2019]
+```{r echo = FALSE, out.width="52%", fig.align = "center"}
 knitr::include_graphics("https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41562-018-0506-1/MediaObjects/41562_2018_506_Fig3_HTML.png")
 ```
 
 Example specification curve analysis (SCA) from [Orben  & Przybylski, 2019](http://nature.com/articles/s41562-018-0506-1)
 ]
 
-.panel[.panel-name[Cosme & Lopez, in revision]
-```{r echo = FALSE, out.width="65%", fig.align = "center"}
-knitr::include_graphics("img/cosme_lopez_curves.png")
+.panel[.panel-name[Cosme & Lopez, 2020]
+```{r echo = FALSE, out.width="57%", fig.align = "center"}
+knitr::include_graphics("https://oup.silverchair-cdn.com/oup/backfile/Content_public/Journal/scan/PAP/10.1093_scan_nsaa155/2/nsaa155f1.jpeg?Expires=1652231337&Signature=bF-qwPQM2uk9U4ax9HcovP1UD5hfZarY7pDGZDfmV5cDwPYq~YWLDiHvpfoQtN0FwieSOYIMk1n5mLuS57oG36-atTuf9653INkwoEjrNge86E3dEqdzor~D3yhurWGE09vsuqLlm8M3TDr8IrFuujWzjFIGTWoVhxRW3zwt3cM1yzizhBTHZDmYCGInJXbQPQUFdrSYakpuRjTj8kj8RkkMWlnW4w3zRJrr0854Zvm4TobGS-IYDBTIRy9uBo35A9vt3h6-t2qWCC7tiTUi3xvIPxDiUIvOFFuLMO09~OdLSyFaMSpSxfwaD8fdKpaNfTlUPelvjsgdWkficjbIyQ__&Key-Pair-Id=APKAIE5G5CRDK6RD3PGA")
 ```
 
 Example specification curve analysis (SCA) from [Cosme & Lopez](https://psyarxiv.com/23mu5)
 ]
 
-.panel[.panel-name[Cosme et al., 2020]
+.panel[.panel-name[Cosme et al., preprint]
 <br>
-```{r echo = FALSE, out.width="90%", fig.align = "center"}
-knitr::include_graphics("https://oup.silverchair-cdn.com/oup/backfile/Content_public/Journal/scan/PAP/10.1093_scan_nsaa002/7/nsaa002f10.png?Expires=1604368651&Signature=hzNIrWEIkhVDY2m-XpXodZ5CWBk6csLvQHLgpQT2rBWAOkUvXfwipV2vxMmCYp5Cn8cRlM7Stqu0opQCMdHz4BJXqjV2Mw4fCyUYs0P0aR3x8EmNzBX7yMrfaZBJHRc-HNftYO2UoLXbECQudUwN7Q~p9s3qG-8mzRpwF2o2hxWGi6sNoCyMr0WrYm9NPDe5mXrZ~1oBYSRxtmYTUUU9s0gacl4hw5g-BwL9HNaj0JNoBNN3a9pvHLzqbOFUZHOO1IGcE303fCIUXaqoIyWzr49cnBHpwh1QxC~u4PPdiSyGRyO98iTkj7Yo9QJYj40T1RRmbgtNuhjl4JceYxdmgw__&Key-Pair-Id=APKAIE5G5CRDK6RD3PGA")
+```{r echo = FALSE, out.width="35%", fig.align = "center"}
+knitr::include_graphics("img/cosme_curve.png")
 ```
 
-Example specification curve analysis (SCA) from [Cosme et al., 2020](https://academic.oup.com/scan/advance-article/doi/10.1093/scan/nsaa002/5716615)
+Example specification curve analysis (SCA) from [Cosme et al., preprint](https://psyarxiv.com/9cxfj)
 ]
 ]
 
 ---
 
 ## 3. Inferential statistics
-#### Curve metrics of interest in the observed curve
+<br>
+#### Metrics of interest in the observed curve
 
 * Median curve estimate
 * The share of positive or negative associations that are statistically significant
 
 --
 
-<br><br>
+<br>
 .center[
 ###But are the observed effects surprising given the null hypothesis?
 ]
@@ -299,7 +306,7 @@ Example specification curve analysis (SCA) from [Cosme et al., 2020](https://aca
 + Is the share of dominant signs (e.g., positive or negative effects) that are statistically significant different than the null?
 
 
-```{r echo = FALSE, out.width="90%"}
+```{r echo = FALSE, out.width="75%", fig.align="center"}
 knitr::include_graphics("img/table2_2020.png")
 ```
 
@@ -316,7 +323,8 @@ class: center, middle
 
 <br><br><br>
 .center[
-##What is the relationship between mental health and satisfaction with life?
+## What is the relationship between mental health
+## and satisfaction with life?
 ]
 
 ---
@@ -324,16 +332,14 @@ class: center, middle
 --
 
 #### Ways of operationalizing of the IV "mental health"
-
-* `CEDS10` = mean depression score on the CESD-10
-* `GAD` = summed anxiety score on the GAD-7
-* `PANAS_negative_Affect` = mean negative affect score on the PANAS-X
-* `PS` = summed perceived stress score on the PSS
+* `CEDS10` = depression score on the CESD-10
+* `GAD` = anxiety score on the GAD-7
+* `PANAS_negative_Affect` = negative affect score on the PANAS
+* `PSS` = perceived stress score on the PSS
 
 --
 
 #### Control variables
-
 * `age` = age
 * `gender` = gender 
 * `mother_edu` = maternal education
@@ -341,7 +347,6 @@ class: center, middle
 --
 
 #### Analytic decisions
-
 * Statistical modeling approach
   * Linear regression
 * Outliers
@@ -395,7 +400,8 @@ These data are generated based on an existing dataset from a study looking at he
 * Create winsorized independent variables (+/- 3 SD from the mean)
 * Mean center and standardize each variable
 
-```{r, echo = FALSE, out.height="50px"}
+.scroll-output[
+```{r, echo = TRUE, out.height="50px"}
 # load data
 df = read.csv("sca_tutorial_inferences_data.csv", stringsAsFactors = FALSE)
 
@@ -421,17 +427,18 @@ model_df = df %>%
   select(PID, age, gender, mother_edu, SWLS, sort(tidyselect::peek_vars()))
 
 # print
-model_df %>%
-  mutate_if(is.numeric, ~round(., 2)) %>%
-  DT::datatable(rownames = FALSE, extensions = 'FixedColumns',
-                    options = list(scrollX = TRUE,
-                                   scrollY = TRUE,
-                                   pageLength = 5,
-                                   autoWidth = TRUE,
-                                   fixedColumns = list(leftColumns = 1),
-                                   dom = 't'))
+# model_df %>%
+#   mutate_if(is.numeric, ~round(., 2)) %>%
+#   DT::datatable(rownames = FALSE, extensions = 'FixedColumns',
+#                     options = list(scrollX = TRUE,
+#                                    scrollY = TRUE,
+#                                    pageLength = 5,
+#                                    autoWidth = TRUE,
+#                                    fixedColumns = list(leftColumns = 1),
+#                                    dom = 't'))
 
 ```
+]
 
 ---
 
@@ -476,7 +483,7 @@ Here, we unpack 3 different methods and discuss the advantages and disadvantages
 * NAs must be omitted across all model specifications
 * Doesn’t give parameter estimates for factors directly; you need to extract them using `MuMIn::get.models()`
 * It may run nested models you aren't interested in if you don't subset
-* If you have multiple independent variables of interest, you will need to specify each maxmial model separately and combine after running
+* If you have multiple independent variables of interest, you will need to specify each maximal model separately and combine after running
 ]
 
 .panel[.panel-name[code]
@@ -606,20 +613,16 @@ output_purrr %>%
 * You can easily run the models in specific subsets of your data 
 
 #### Disadvantages / limitations
-* Does not run all possible combinations of control variables
-* Difficult to customize without modifying source functions
-* Without modification, it does not currently handle multilevel modeling
-  * There is a [branch in development](https://github.com/masurp/specr/tree/add_random_effects) to extend this framework to multilevel modeling
-  * I use the [forked version of the package I modified](https://github.com/dcosme/specr/tree/plotmods) to run multilevel models and customize plots
+* <controls>
 ]
 
 .panel[.panel-name[code]
 ```{r specr, echo = FALSE}
 output_specr = run_specs(df = model_df,
-                         y = dvs, 
+                         y = dvs,
                          x = ivs,
                          controls = control_vars,
-                         model = model, 
+                         model = model,
                          subsets = NULL,
                          keep.results = TRUE)
 ```
@@ -739,7 +742,7 @@ cowplot::plot_grid(top, bottom, ncol = 1, align = "v", axis = 'l',
 
 .panelset[
 .panel[.panel-name[code]
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 output_specr %>%
   mutate(winsorized = ifelse(grepl("winsorized", x), "yes", "no"),
          x = gsub("_winsorized", "", x)) %>%
@@ -754,23 +757,6 @@ output_specr %>%
   plot_specs(., choices = c("x", "winsorized", "controls"))
 ```
 ]
-]
-
----
-
-## Plotting inspiration
-Figures from [Cosme & Lopez](https://psyarxiv.com/23mu5)
-
-.pull-left[
-```{r echo = FALSE, out.width="100%"}
-knitr::include_graphics("img/cosme_lopez_curve.png")
-```
-]
-
-.pull-right[
-```{r echo = FALSE, out.width="100%"}
-knitr::include_graphics("img/cosme_lopez_compare.png")
-```
 ]
 
 ---
@@ -993,7 +979,7 @@ boot_results = run_boot_null(sca_results = output_specr, ivs = ivs, dvs = dvs, c
 ```{r, echo = FALSE, eval = TRUE}
 boot_results$boot_summary %>%
   mutate_if(is.numeric, ~round(., 2)) %>%
-  DT::datatable(rownames = FALSE, extensions = 'FixedColumns', 
+  DT::datatable(rownames = FALSE, extensions = 'FixedColumns',
                     options = list(scrollX = TRUE,
                                    scrollY = TRUE,
                                    pageLength = 5,
@@ -1017,7 +1003,7 @@ boot_results$boot_summary %>%
 * Share of negative statistically significant associations at p < .05
 
 ]
-.panel[.panel-name[p-vales]
+.panel[.panel-name[p-values]
 
 These represent the number of times that an equally or more extreme value was observed in the bootstrapped null curve distribution (i.e. 1 / 500 = .002)
 
@@ -1027,7 +1013,7 @@ summary_sca = summarize_sca(sca_results = output_specr, group_vars = "y")
 
 summarize_boot_null(sca_summary = summary_sca, boot_null_summary = boot_results$boot_summary, group_vars = "y") %>%
   mutate_if(is.numeric, ~round(., 2)) %>%
-  DT::datatable(rownames = FALSE, extensions = 'FixedColumns', 
+  DT::datatable(rownames = FALSE, extensions = 'FixedColumns',
                     options = list(scrollX = TRUE,
                                    scrollY = TRUE,
                                    autoWidth = TRUE,
@@ -1068,7 +1054,7 @@ class:center, middle
 
 
 .panelset[
-.panel[.panel-name[reading list]
+.panel[.panel-name[Reading list]
 * [Specification curve analysis - Simonsohn, Simmons, & Nelson, 2020](https://www.nature.com/articles/s41562-020-0912-z)
 
 * [Increasing Transparency Through a Multiverse Analysis - Steegen et al., 2016](https://journals.sagepub.com/doi/10.1177/1745691616658637)
@@ -1081,14 +1067,14 @@ class:center, middle
 
 * [Screens, Teens, and Psychological Well-Being: Evidence From Three Time-Use-Diary Studies - Orben  & Przybylski, 2019](https://journals.sagepub.com/doi/10.1177/0956797619830329)
 
-* [Neural indicators of food cue reactivity, regulation, and valuation and their associations with body composition and daily eating behavior - Cosme & Lopez, in revision](https://psyarxiv.com/23mu5/)
+* [Neural indicators of food cue reactivity, regulation, and valuation and their associations with body composition and daily eating behavior - Cosme & Lopez, 2020](https://psyarxiv.com/23mu5/)
 
 ]
 
 .panel[.panel-name[Programming resources]
-* [EDUC 610, Functional Programming with R - Daniel Anderson](https://uo-datasci-specialization.github.io/c3-fun_program_r/schedule.html)
-
 * [`specr` documentation](https://masurp.github.io/specr/)
+
+* [EDUC 610, Functional Programming with R - Daniel Anderson](https://uo-datasci-specialization.github.io/c3-fun_program_r/schedule.html)
 
 * [R for Data Science - Grolemund & Wickham](https://r4ds.had.co.nz/many-models.html)
 ]

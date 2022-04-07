@@ -1,0 +1,527 @@
+/***********
+ Slide margins and spacings
+ ***********/
+.remark-slide-content {
+  padding-top: 25px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 25px;
+}
+/*
+To specify the margin of the first title h1
+*/
+.remark-slide-content > h1:first-of-type {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+.remark-slide-content > h2:first-of-type {
+  color: #D30000;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+.remark-slide-content > h3:first-of-type {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.remark-slide-content > h4:first-of-type {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.remark-slide table {
+  margin: auto;
+  border-top: 1px solid #666;
+  border-bottom: 1px solid #666;
+  font-size: 12px
+}
+.remark-slide table thead th { border-bottom: 1px solid #ddd; }
+th, td {
+  padding: 5px;
+  font-size: 12px
+}
+.remark-slide thead, .remark-slide tfoot, .remark-slide tr:nth-child(even) { background: #eee }
+
+
+/*************************
+  Custom classes
+**************************/
+
+.pull-left-2 {
+  float: left;
+  width: 60%;
+}
+.pull-right-1 {
+  float: right;
+  width: 36%;
+}
+
+.pull-left-1 {
+  float: left;
+  width: 36%;
+}
+.pull-right-2 {
+  float: right;
+  width: 60%;
+}
+
+
+/* use to position text at the bottom */
+.pull-down {
+  position: absolute;
+  bottom: 50px;
+}
+
+/* Change default inverse background colour */
+.inverse {
+  background-color: #90BAC7;
+  text-shadow: none;
+}
+.inverse .remark-slide-number {
+  display: none;
+}
+/* background colour classes */
+.penn-blue {
+  background-color: #90BAC7;
+  color: white;
+}
+.penn-darkblue {
+  background-color: #011F5B;
+}
+.penn-red {
+  background-color: #D30000;
+  color: white;
+}
+/* segue */
+.segue {
+  text-align:center;
+  vertical-align: middle;
+  background-color: #90BAC7;
+  color: #ffffff;
+  text-shadow: 0 0 20px #333;
+}
+.segue .remark-slide-number {
+  display: none;
+}
+
+.segue-red {
+  text-align:center;
+  vertical-align: middle;
+  background-color: #D30000;
+  color: #ffffff;
+  text-shadow: 0 0 20px #333;
+}
+.segue-red .remark-slide-number {
+  display: none;
+}
+
+.segue-darkblue {
+  text-align:center;
+  vertical-align: middle;
+  background-color: #011F5B;
+  color: #424242;
+  text-shadow: 0 0 2px #333;
+}
+.segue-darkblue .remark-slide-number {
+  display: none;
+}
+
+/* example slide with background colour to distinguish
+it from other content slides */
+.eg {
+  background-color: #F1F1F1;
+  /* rgb(231, 238, 242); */
+}
+.eg.nobackground {
+  background-color:white;
+}
+
+/* link colour */
+a {
+    color: #357c92;
+}
+
+a, a > code {
+  color: #357c92;
+  text-decoration: none;
+}
+
+.columns-2 {
+  -webkit-columns: 2;
+  -moz-columns: 2;
+  columns: 2;
+  -webkit-column-gap: 1em;
+  -moz-column-gap: 1em;
+  column-gap: 1em;
+}
+
+.columns-21 {
+  -webkit-columns: 66%, 33%;
+  -moz-columns: 66%, 33%;
+  columns: 66%, 33%;
+  -webkit-column-gap: 1em;
+  -moz-column-gap: 1em;
+  column-gap: 1em;
+}
+
+
+
+/******************
+ * Slide scrolling
+ * (non-functional)
+ * not sure if it is a good idea anyway
+slides > slide {
+  overflow: scroll;
+ padding: 5px 40px;
+}
+.scrollable-slide .remark-slide {
+  height: 400px;
+  overflow: scroll !important;
+}
+ ******************/
+
+.scroll-box-8 {
+  height:8em;
+  overflow-y: scroll;
+}
+.scroll-box-10 {
+  height:10em;
+  overflow-y: scroll;
+}
+.scroll-box-12 {
+  height:12em;
+  overflow-y: scroll;
+}
+.scroll-box-14 {
+  height:14em;
+  overflow-y: scroll;
+}
+.scroll-box-16 {
+  height:16em;
+  overflow-y: scroll;
+}
+.scroll-box-18 {
+  height:18em;
+  overflow-y: scroll;
+}
+.scroll-box-20 {
+  height:20em;
+  overflow-y: scroll;
+}
+.scroll-output {
+  height: 90%;
+  overflow-y: scroll;
+}
+
+
+
+
+ /* inline code background */
+ .remark-inline-code {
+   /* until the link between code and mathjax
+   is broken, we need to use transparent */
+  background: transparent; /* #F5F5F5; /* lighter */
+  /* background: #e7e8e2; /* darker */
+  border-radius: 3px;
+  padding: 2px;
+}
+
+
+
+/******************
+ * Coloured content boxes
+ ****************/
+.content-box {
+    box-sizing: border-box;
+    background-color: #e2e2e2;
+}
+.content-box-blue,
+.content-box-gray,
+.content-box-grey,
+.content-box-army,
+.content-box-green,
+.content-box-purple,
+.content-box-red,
+.content-box-darkblue {
+  box-sizing: border-box;
+  border-radius: 15px;
+  margin: 0 0 15px;
+  overflow: hidden;
+  padding: 0px 20px 0px 20px;
+  width: 100%;
+}
+.content-box-blue { background-color: #F0F8FF; }
+.content-box-gray { background-color: #e2e2e2; }
+.content-box-grey {	background-color: #F5F5F5; }
+.content-box-army {	background-color: #737a36; }
+.content-box-green { background-color: #d9edc2; }
+.content-box-purple { background-color: #e2e2f9; }
+.content-box-red { background-color: #ffcccc; }
+.content-box-darkblue { background-color: #fef5c4; }
+.content-box-blue .remark-inline-code,
+.content-box-blue .remark-inline-code,
+.content-box-gray .remark-inline-code,
+.content-box-grey .remark-inline-code,
+.content-box-army .remark-inline-code,
+.content-box-green .remark-inline-code,
+.content-box-purple .remark-inline-code,
+.content-box-red .remark-inline-code,
+.content-box-darkblue .remark-inline-code {
+  background: none;
+}
+
+.full-width {
+    display: flex;
+    width: 100%;
+    flex: 1 1 auto;
+}
+
+
+
+/***********
+ Changed CSS
+ **************/
+
+.opacity{ opacity: 0.5; }
+.blur {
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(10px);
+    -o-filter: blur(5px);
+    -ms-filter: blur(5px);
+    filter: blur(5px);
+}
+.grayscale img {
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+}
+
+/**************
+ * Fancy stuff
+ **************/
+.rotate-left {
+    -webkit-transform: rotate(-2deg);
+    -moz-transform: rotate(-2deg);
+    transform: rotate(-2deg);
+}
+.rotate-right {
+    -webkit-transform: rotate(2deg);
+    -moz-transform: rotate(2deg);
+    transform: rotate(2deg);
+}
+/**********
+ * Image stuff
+ ************/
+.polaroid img {
+    border: 10px solid #fff;
+    border-bottom: 45px solid #fff;
+    -webkit-box-shadow: 3px 3px 3px #111;
+    -moz-box-shadow: 3px 3px 3px #111;
+    box-shadow: 3px 3px 3px #111;
+}
+.shadow {
+    -moz-border-radius: 5px;
+    -moz-box-shadow: 5px 5px 5px #aaa;
+    -webkit-box-shadow: 5px 5px 5px #aaa;
+    box-shadow: 5px 5px 5px #aaa;
+    border-radius: 2px;
+}
+
+
+/* disable background colour when printing */
+
+@page { margin: 0; }
+@media print {
+  .inverse, .segue, .segue-darkblue, .segue-red, .penn-blue,
+  .penn-darkblue, .penn-red {
+    background-color: transparent;
+    color: black;
+    text-shadow: none;
+  }
+  .inverse h1, .inverse h2, .inverse h3, .inverse h4, .inverse h5, .segue {
+    background-color: transparent;
+    color: black;
+    text-shadow: none;
+  }
+  .eg {
+    background-color: transparent;
+  }
+  .remark-slide-scaler {
+    width: 100% !important;
+    height: 100% !important;
+    transform: scale(1) !important;
+    top: 0 !important;
+    left: 0 !important;
+  }
+}
+
+/* changes bullet spacing */
+ul {
+    font-size: 0;
+}
+ul li {
+  font-size: .8rem;
+}
+
+/* adding font size options */
+.large {
+  font-size: 130%
+}
+.medium {
+  font-size: 100%
+}
+.small {
+  font-size: 70%
+}
+.extrasmall {
+  font-size: 50%
+}
+.tiny {
+  font-size: 40%
+}
+
+.title-slide {
+  background-image: url(https://www.asc.upenn.edu/themes/annenberg/assets/img/annenberg-logo.svg);
+  /* background-image: url(https://sydney.edu.au/etc/designs/corporate-commons/bower_components/corporate-frontend/dist/assets/img/USydLogo.svg); */
+  background-position: 10% 90%;
+  background-size: 250px;
+  background-color: #D30000;
+  text-align:left;
+  vertical-align: top;
+  text-shadow: none;
+  /*text-shadow: 0 0 5px #333;*/
+  /*padding-left: 100px;   delete this for 4:3 aspect ratio */
+}
+
+/* H1 fonts  */
+.title-slide h1 {
+  color: #ffffff;
+  font-weight: normal;
+  font-size: 45px;
+  padding: 20px;
+  text-align: left;
+  vertical-align: middle;
+  margin-bottom: 18px;
+}
+
+/* H2 fonts */
+.title-slide h2 {
+  color: #ffffff !important; /* first of type is master brand red */
+  font-size: 35px;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  margin-top: 0px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+/* H3 fonts */
+.title-slide h3 {
+  font-size: 28px;
+  font-weight: normal;
+  color: black;
+  padding-left: 20px;
+  margin: 0px;
+  line-height: 1;
+  text-align: left;
+  vertical-align: middle;
+}
+
+/* link colour */
+.title-slide a {
+    color: #dcdcdd;
+}
+
+
+/* Remove slide count */
+.title-slide .remark-slide-number {
+  display: none;
+}
+
+/* USYD blockquote */
+blockquote, .blockquote {
+  display: block;
+  margin-top: 0.1em;
+  margin-bottom: 0.2em;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-left: solid 10px #90BAC7;
+  border-top: solid 2px #90BAC7;
+  border-bottom: solid 2px #90BAC7;
+  border-right: solid 2px #90BAC7;
+  box-shadow: 0 0 6px rgba(0,0,0,0.5);
+  /* background-color: #D30000; */
+  color: #D30000;
+  padding: 0.5em;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.blockquote p {
+  margin-top: 0px;
+  margin-bottom: 2px;
+}
+.blockquote > h1:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+.blockquote > h2:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+.blockquote > h3:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 2px;
+}
+.blockquote > h4:first-of-type {
+  margin-top: 0px;
+  margin-bottom: 2px;
+}
+
+.text-shadow {
+  text-shadow: 0 0 4px #424242;
+}
+
+.caption {
+  text-align: center;
+  font-size: .8rem;
+}
+
+/* if wanted to change mathjax formatting
+.remark-inline-code .mjx-chtml {
+  color: blue;
+}
+*/
+
+/* References: many customisations adapted from the examples here:
+https://github.com/yihui/xaringan/tree/master/inst/rmarkdown/templates/xaringan/resources
+*/
+
+
+
+/*
+Masterbrand charcoal #424242;
+C=0 M=0 Y=0 K=90
+R=66 G=66 B=66
+
+Masterbrand red #D30000;
+C=0 M=0 Y=0 K=90
+R=66 G=66 B=66
+
+Masterbrand white #ffffff;
+C=0 M=0 Y=0 K=0
+R=255 G=255 B=255
+
+Masterbrand black #000000;
+C=0 M=0 Y=0 K=100
+R=10 G=10 B=10
+
+Accent yellow #011F5B
+C=0 M=25 Y=98 K=0
+R=255 G=184 B=0
+
+Accent blue #90BAC7
+C=100 M=61 Y=0 K=0
+R=1 G=72 B=164
+
+Accent grey - supportive #F1F1F1
+C=0 M=0 Y=0 K=10
+R=241 G=241 B=241
+*/
